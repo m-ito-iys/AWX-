@@ -1,0 +1,14 @@
+---
+- name: DT0283の動作テスト
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: テストフォルダを作成
+      ansible.windows.win_file:
+        path: C:\AnsibleTest
+        state: directory
+
+    - name: 完了メッセージファイルを配置
+      ansible.windows.win_copy:
+        content: "AWXからのPlaybook実行に成功しました！"
+        dest: C:\AnsibleTest\success.txt
