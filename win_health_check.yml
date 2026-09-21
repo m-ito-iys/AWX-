@@ -1,0 +1,25 @@
+---
+- name: DT0283 健康診断ジョブ
+  hosts: DT0283
+  gather_facts: yes
+
+  tasks:
+    - name: PCの基本情報を画面に出力
+      ansible.builtin.debug:
+        msg:
+          - "================ [ DT0283 端末情報 ] ================"
+          - "ホスト名      : {{ ansible_hostname }}"
+          - "OSバージョン  : {{ ansible_os_name }} ({{ ansible_distribution_version }})"
+          - "総メモリ容量  : {{ (ansible_totalmem / 1024 / 1024 / 1024) | round(2) }} GB"
+          - "空きメモリ容量: {{ (ansible_memfree_mb / 1024) | round(2) }} GB"
+
+    - name: Cドライブの空き容量を計算して出力
+      ansible.builtin.debug:
+        msg:
+          - "================ [ ディスク残量 ] ================"
+          - "ドライブ名  : {{ item.mount }}"
+          - "全容量      : {{ (item.size_total / 1024 / 1024 / 1024) | round(2) }} GB"
+          - "空き容量    : {{ (item.size_free / 1024 / 1024 / 1024) | round(2) }} GB"
+          - "使用率      : {{ ((item.size_total - item.size_free) / item.size_total * 100) | round(1) }} %"
+      loop: "{{ ansible_mounts }}"
+      when: item.mount == 'C:'
