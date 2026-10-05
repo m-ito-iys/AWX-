@@ -1,0 +1,11 @@
+---
+- name: Windows 端末の再起動
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: 60秒後に再起動を実行
+      ansible.windows.win_reboot:
+        msg: "システムメンテナンスのため、60秒後にPCが再起動します。作業中のデータを保存してください。"
+        pre_reboot_delay: 60
+        reboot_timeout: 600
